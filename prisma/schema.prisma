@@ -1,0 +1,82 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model School {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  region_id  String
+  region     Region   @relation(name: "regionSchools", fields: [region_id], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  teachers_workplaces TeacherWorkplace[] @relation(name: "SchoolWorkplace")
+
+  @@map("school")
+}
+
+model Region {
+  id         String   @id @default(uuid())
+  name       String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  schools    School[] @relation(name: "regionSchools")
+
+  @@map("region")
+}
+
+// TEACHER 
+model Teacher {
+  id                   String   @id @default(uuid())
+  first_name           String
+  last_name            String
+  email                String   @unique
+  username             String   @unique
+  hashed_password      String
+  hashed_refresh_token String?
+  activation_link      String?  @unique
+  is_active            Boolean  @default(false)
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  teacher_workplace TeacherWorkplace[] @relation(name: "TeacherWorkplace")
+
+  @@map("teacher")
+}
+
+model TeacherWorkplace {
+  id         String   @id @default(uuid())
+  position   String
+  teacherId  String
+  schoolId   String
+  teacher    Teacher  @relation(name: "TeacherWorkplace", fields: [teacherId], references: [id])
+  school     School   @relation(name: "SchoolWorkplace", fields: [schoolId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("teacher_workplace")
+}
+
+model Admin {
+  id                   String   @id @default(uuid())
+  first_name           String
+  last_name            String
+  email                String   @unique
+  username             String   @unique
+  hashed_password      String
+  hashed_refresh_token String?
+  activation_link      String?  @unique
+  is_active            Boolean  @default(false)
+  created_at           DateTime @default(now())
+  updated_at           DateTime @updatedAt
+
+  @@map("admin")
+}
