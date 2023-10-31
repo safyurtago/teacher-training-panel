@@ -4,7 +4,7 @@ export class FindTeacherWorkplaceDto {
   @ApiProperty({example: "Math Teacher", description: "Teacher Position"})
   position?: string;
   @ApiProperty({example: '879b0fc6-74ea-4100-86cd-f6debf05971a', description: 'Teacher ID'})
-  teacherId?: string;
+  teacher_username?: string;
   @ApiProperty({example: '879b0fc6-74ea-4100-86cd-f6debf05971a', description: 'School ID'})
-  schoolId?: string;
+  school_name?: string;
 }

@@ -55,6 +55,7 @@ export class TeacherController {
 
   @ApiOperation({summary: 'FIND ALL FILTERD TeacherS'})
   @ApiResponse({status: 200, type: [Teacher]})
+  @UseGuards(AdminGuard)
   @Post('find')
   findAll(@Body() findFilteredTeachersDto: FindFilteredTeachersDto) {
     return this.teacherService.findFilteredTeachers(findFilteredTeachersDto);
