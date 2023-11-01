@@ -47,9 +47,22 @@ model Teacher {
   created_at           DateTime @default(now())
   updated_at           DateTime @updatedAt
 
-  teacher_workplace TeacherWorkplace[] @relation(name: "TeacherWorkplace")
+  teacher_personal_info TeacherPersonalInfo[] @relation(name: "TeacherPersonalInfo")
+  teacher_workplace     TeacherWorkplace[]    @relation(name: "TeacherWorkplace")
 
   @@map("teacher")
+}
+
+model TeacherPersonalInfo {
+  id              String      @id @default(uuid())
+  teacherId       String
+  teacher         Teacher     @relation(name: "TeacherPersonalInfo", fields: [teacherId], references: [id])
+  nationality     String?
+  gender          String?
+  birthDate       String?
+  passport_serial String?
+  is_active       Boolean     @default(true)
+  photo           String?
 }
 
 model TeacherWorkplace {

@@ -54,7 +54,7 @@ export class TeacherWorkplaceService {
   /** FIND ONE WORKPLACE BY ID BY TEACHER */
   async findOneByTeacher(id: string, req: Request) {
     const teacher = req['teacher']
-    const workplace = await this.prismaService.teacherWorkplace.findFirst({where: {id}})
+    const workplace = await this.prismaService.teacherWorkplace.findFirst({where: {id}, include: {teacher: true, school: true}});
     if (!workplace) { throw new BadRequestException(`Teacher workplace not found`); }
     if (teacher.id !== workplace.teacherId) { throw new ForbiddenException('You do not have permission!'); };
     return workplace;
@@ -62,7 +62,7 @@ export class TeacherWorkplaceService {
 
   /** FIND ONE WORKPLACE BY ID BY ADMIN */
   async findOneByAdmin(id: string) {
-    const workplace = await this.prismaService.teacherWorkplace.findFirst({where: {id}})
+    const workplace = await this.prismaService.teacherWorkplace.findFirst({where: {id}, include: {school: true, teacher: true}})
     if (!workplace) { throw new BadRequestException(`Teacher workplace not found`); }
     return workplace;
   }
@@ -70,8 +70,12 @@ export class TeacherWorkplaceService {
   /** UPDATE ONE WORKPLACE BY ID */
   async update(id: string, updateTeacherWorkplaceDto: UpdateTeacherWorkplaceDto, req: Request) {
     const teacher = req['teacher']
-    const school = await this.prismaService.school.findFirst({where: {id: updateTeacherWorkplaceDto.schoolId}});
-    if (!school) throw new BadRequestException('School Not Found!')
+    if (updateTeacherWorkplaceDto.schoolId !== '') {
+      const school = await this.prismaService.school.findFirst({where: {id: updateTeacherWorkplaceDto.schoolId}});
+      if (!school) throw new BadRequestException('School Not Found!')
+    } else {
+      throw new  BadRequestException('School Id must be provided')
+    }
     const workplace = await this.prismaService.teacherWorkplace.findFirst({where: {id}})
     if (!workplace) { throw new BadRequestException(`Teacher Workplace Not Found`); }
     if (teacher.id !== workplace.teacherId) { throw new ForbiddenException('You do not have permission!'); };

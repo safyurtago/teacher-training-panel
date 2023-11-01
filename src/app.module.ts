@@ -8,6 +8,8 @@ import { TeacherModule } from './teacher/teacher.module';
 import { RegionModule } from './region/region.module';
 import { SchoolModule } from './school/school.module';
 import { TeacherWorkplaceModule } from './teacher_workplace/teacher_workplace.module';
+import { TeacherPersonalInfoModule } from './teacher_personal_info/teacher_personal_info.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { TeacherWorkplaceModule } from './teacher_workplace/teacher_workplace.mo
     RegionModule,
     SchoolModule,
     TeacherWorkplaceModule,
+    TeacherPersonalInfoModule,
+    FileModule,
   ],
   controllers: [],
   providers: [],
