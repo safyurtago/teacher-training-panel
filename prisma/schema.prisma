@@ -33,6 +33,127 @@ model Region {
   @@map("region")
 }
 
+model ChoiceQuestion {
+  id             String         @id @default(uuid())
+  text           String
+  description    String?
+  correct_choice String
+  created_at     DateTime       @default(now())
+  updated_at     DateTime       @updatedAt
+  answers        ChoiceAnswer[] @relation(name: "QuestionAnswer")
+
+  @@map("choice_question")
+}
+
+model ChoiceAnswer {
+  id         String         @id @default(uuid())
+  questionId String
+  question   ChoiceQuestion @relation(name: "QuestionAnswer", fields: [questionId], references: [id])
+  key        String
+  value      String
+
+  choice_answer_applys ChoiceAnswerApply[] @relation(name: "ChoiceAnswerApply")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("choice_answer")
+}
+
+model ChoiceAnswerApply {
+  id         String       @id @default(uuid())
+  teacherId  String
+  teacher    Teacher      @relation(name: "TeacherApply", fields: [teacherId], references: [id])
+  answerId   String
+  answer     ChoiceAnswer @relation(name: "ChoiceAnswerApply", fields: [answerId], references: [id])
+  key        String
+  is_correct Boolean?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("choice_answer_apply")
+}
+
+model WriteQuestion {
+  id             String  @id @default(uuid())
+  text           String
+  correct_answer String
+  is_active      Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  question_applys WriteQuestionApply[] @relation(name: "WriteQuestion")
+
+  @@map("write_question")
+}
+
+model WriteQuestionApply {
+  id         String        @id @default(uuid())
+  questionId String
+  question   WriteQuestion @relation(name: "WriteQuestion", fields: [questionId], references: [id])
+  teacherId  String
+  teacher    Teacher       @relation(name: "WriteQuestionApply", fields: [teacherId], references: [id])
+
+  value      String
+  is_correct Boolean? @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("write_question_apply")
+}
+
+model Training {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  subject     String?
+  max_score   Int?
+  pass_score  Int?
+  file        String?
+  is_active   Boolean? @default(true)
+
+  training_applys TrainingApply[] @relation(name: "TrainingApply")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("training")
+}
+
+model TrainingApply {
+  id              String               @id @default(uuid())
+  trainingId      String
+  train           Training             @relation(name: "TrainingApply", fields: [trainingId], references: [id])
+  teacherId       String
+  teacher         Teacher              @relation(name: "TrainingTeacher", fields: [teacherId], references: [id])
+  text            String?
+  file            String?
+  is_seen         Boolean?
+  checking_applys CheckTrainingApply[] @relation(name: "CheckTrainingApply")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("training_apply")
+}
+
+model CheckTrainingApply {
+  id               String        @id @default(uuid())
+  training_applyId String
+  training_apply   TrainingApply @relation(name: "CheckTrainingApply", fields: [training_applyId], references: [id])
+  description      String?
+  score            Int           @default(0)
+  is_active        Boolean?
+  is_seen          Boolean?
+  created_at       DateTime      @default(now())
+  updated_at       DateTime      @updatedAt
+
+  @@map("check_training_apply")
+}
+
 // TEACHER 
 model Teacher {
   id                   String   @id @default(uuid())
@@ -47,22 +168,30 @@ model Teacher {
   created_at           DateTime @default(now())
   updated_at           DateTime @updatedAt
 
-  teacher_personal_info TeacherPersonalInfo[] @relation(name: "TeacherPersonalInfo")
-  teacher_workplace     TeacherWorkplace[]    @relation(name: "TeacherWorkplace")
+  teacher_training_applys TrainingApply[]       @relation(name: "TrainingTeacher")
+  write_question_applys   WriteQuestionApply[]  @relation(name: "WriteQuestionApply")
+  choice_answer_applys    ChoiceAnswerApply[]   @relation(name: "TeacherApply")
+  teacher_personal_info   TeacherPersonalInfo[] @relation(name: "TeacherPersonalInfo")
+  teacher_workplace       TeacherWorkplace[]    @relation(name: "TeacherWorkplace")
 
   @@map("teacher")
 }
 
 model TeacherPersonalInfo {
-  id              String      @id @default(uuid())
+  id              String  @id @default(uuid())
   teacherId       String
-  teacher         Teacher     @relation(name: "TeacherPersonalInfo", fields: [teacherId], references: [id])
+  teacher         Teacher @relation(name: "TeacherPersonalInfo", fields: [teacherId], references: [id])
   nationality     String?
   gender          String?
   birthDate       String?
   passport_serial String?
-  is_active       Boolean     @default(true)
+  is_active       Boolean @default(true)
   photo           String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("teacher_personal_info")
 }
 
 model TeacherWorkplace {

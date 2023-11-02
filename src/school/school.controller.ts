@@ -1,10 +1,11 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { SchoolService } from './school.service';
 import { CreateSchoolDto, FindSchoolDto, UpdateSchoolDto } from './dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { School } from './entities/school.entity';
 import { AdminGuard } from '../common/guards/admin.guard';
 
+@ApiTags('SCHOOL')
 @Controller('school')
 export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}

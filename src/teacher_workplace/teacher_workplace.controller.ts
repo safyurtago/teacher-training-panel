@@ -1,12 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
 import { TeacherWorkplaceService } from './teacher_workplace.service';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TeacherWorkplace } from './entities/teacher_workplace.entity';
 import { TeacherGuard } from '../common/guards/teacher.guard';
 import { CreateTeacherWorkplaceDto, FindTeacherWorkplaceDto, UpdateTeacherWorkplaceDto } from './dto';
 import { AdminGuard } from '../common/guards/admin.guard';
 import { Request } from 'express';
 
+@ApiTags('TEACHER_WORKPLACE')
 @Controller('teacher-workplace')
 export class TeacherWorkplaceController {
   constructor(private readonly teacherWorkplaceService: TeacherWorkplaceService) {}

@@ -4,10 +4,11 @@ import { Request } from 'express';
 import { TeacherGuard } from '../common/guards/teacher.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateTeacherPersonalInfoDto, FindTeacherPersonalInfoDto, UpdateTeacherPersonalInfoDto } from './dto';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TeacherPersonalInfo } from './entities/teacher_personal_info.entity';
 import { AdminGuard } from '../common/guards/admin.guard';
 
+@ApiTags('TEACHER_PERSONAL_INFO')
 @Controller('teacher-personal-info')
 export class TeacherPersonalInfoController {
   constructor(private readonly teacherPersonalInfoService: TeacherPersonalInfoService) {}

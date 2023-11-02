@@ -186,13 +186,13 @@ export class TeacherService {
           contains: findFilteredTeachersDto.username
       }
     }
-    return this.prismaService.teacher.findMany({where, include: {teacher_workplace: true, teacher_personal_info: true}})
+    return this.prismaService.teacher.findMany({where, include: {teacher_workplace: true, teacher_personal_info: true, choice_answer_applys: true, write_question_applys: true}})
   }
 
   // FIND ONE Teacher BY ID
   async findOneTeacher (id: string, req: Request) {
     const teacherId = req['teacher'].id;
-    const findTeacher = await this.prismaService.teacher.findFirst({where: {id}, include: {teacher_workplace: true, teacher_personal_info: true}})
+    const findTeacher = await this.prismaService.teacher.findFirst({where: {id}, include: {teacher_workplace: true, teacher_personal_info: true, choice_answer_applys: true, write_question_applys:true}})
     if (!findTeacher) throw new BadRequestException('Teacher not found');
     if (findTeacher.id !== teacherId) throw new BadRequestException('You dont have permission')
     return findTeacher;
@@ -200,7 +200,7 @@ export class TeacherService {
 
     /** FIND ONE Teacher BY ID */
     async findOneTeacherByAdmin (id: string) {
-      const findTeacher = await this.prismaService.teacher.findFirst({where: {id}, include: {teacher_workplace: true, teacher_personal_info: true}})
+      const findTeacher = await this.prismaService.teacher.findFirst({where: {id}, include: {teacher_workplace: true, teacher_personal_info: true, choice_answer_applys: true, write_question_applys: true}})
       if (!findTeacher) throw new BadRequestException('Teacher not found');
       return findTeacher;
     }
