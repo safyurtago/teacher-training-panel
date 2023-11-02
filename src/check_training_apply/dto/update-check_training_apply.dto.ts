@@ -1,4 +1,13 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateCheckTrainingApplyDto } from './create-check_training_apply.dto';
+import { ApiProperty } from "@nestjs/swagger";
+import { IsNumberString, IsOptional, IsString } from "class-validator";
 
-export class UpdateCheckTrainingApplyDto extends PartialType(CreateCheckTrainingApplyDto) {}
+export class UpdateCheckTrainingApplyDto {
+  @ApiProperty({example: 'blablablabal', description: 'Checking Description'})
+  @IsString()
+  @IsOptional()
+  description?: string;
+  @ApiProperty({example: 100, description: 'Checking Apply Score'})
+  @IsNumberString()
+  @IsOptional()
+  score?: number;
+}

@@ -131,7 +131,7 @@ model TrainingApply {
   teacher         Teacher              @relation(name: "TrainingTeacher", fields: [teacherId], references: [id])
   text            String?
   file            String?
-  is_seen         Boolean?
+  is_seen         Boolean?             @default(false)
   checking_applys CheckTrainingApply[] @relation(name: "CheckTrainingApply")
 
   created_at DateTime @default(now())
@@ -146,8 +146,8 @@ model CheckTrainingApply {
   training_apply   TrainingApply @relation(name: "CheckTrainingApply", fields: [training_applyId], references: [id])
   description      String?
   score            Int           @default(0)
-  is_active        Boolean?
-  is_seen          Boolean?
+  is_active        Boolean?      @default(false)
+  is_seen          Boolean?      @default(false)
   created_at       DateTime      @default(now())
   updated_at       DateTime      @updatedAt
 

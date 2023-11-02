@@ -1,34 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { CheckTrainingApplyService } from './check_training_apply.service';
-import { CreateCheckTrainingApplyDto } from './dto/create-check_training_apply.dto';
-import { UpdateCheckTrainingApplyDto } from './dto/update-check_training_apply.dto';
+import { CreateCheckTrainingApplyDto, FindCheckTrainingApplyDto, UpdateCheckTrainingApplyDto } from './dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { CheckTrainingApply } from './entities/check_training_apply.entity';
+import { AdminGuard } from '../common/guards/admin.guard';
 
+@ApiTags('CHECK_TRAINING_APPLY')
 @Controller('check-training-apply')
 export class CheckTrainingApplyController {
   constructor(private readonly checkTrainingApplyService: CheckTrainingApplyService) {}
 
-  @Post()
+
+  @ApiOperation({summary: 'Create Check training apply'})
+  @ApiResponse({status: 201, type: CheckTrainingApply})
+  @UseGuards(AdminGuard)
+  @Post('create')
   create(@Body() createCheckTrainingApplyDto: CreateCheckTrainingApplyDto) {
     return this.checkTrainingApplyService.create(createCheckTrainingApplyDto);
   }
 
-  @Get()
-  findAll() {
-    return this.checkTrainingApplyService.findAll();
+  @ApiOperation({summary: 'Find All Check training apply'})
+  @ApiResponse({status: 200, type: [CheckTrainingApply]})
+  @Post('find')
+  findAll(@Body() findCheckTrainingApplyDto: FindCheckTrainingApplyDto) {
+    return this.checkTrainingApplyService.findAll(findCheckTrainingApplyDto);
   }
 
-  @Get(':id')
+  @ApiOperation({summary: 'Find One Check training apply'})
+  @ApiResponse({status: 201, type: CheckTrainingApply})
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
-    return this.checkTrainingApplyService.findOne(+id);
+    return this.checkTrainingApplyService.findOne(id);
   }
 
-  @Patch(':id')
+  @ApiOperation({summary: 'Update Check training apply'})
+  @ApiResponse({status: 200, type: CheckTrainingApply})
+  @UseGuards(AdminGuard)
+  @Patch('update/:id')
   update(@Param('id') id: string, @Body() updateCheckTrainingApplyDto: UpdateCheckTrainingApplyDto) {
-    return this.checkTrainingApplyService.update(+id, updateCheckTrainingApplyDto);
+    return this.checkTrainingApplyService.update(id, updateCheckTrainingApplyDto);
   }
 
-  @Delete(':id')
+  @ApiOperation({summary: 'Delete Check training apply'})
+  @ApiResponse({status: 200, type: CheckTrainingApply})
+  @UseGuards(AdminGuard)
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.checkTrainingApplyService.remove(+id);
+    return this.checkTrainingApplyService.remove(id);
   }
 }
