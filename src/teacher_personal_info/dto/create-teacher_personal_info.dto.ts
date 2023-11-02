@@ -9,4 +9,6 @@ export class CreateTeacherPersonalInfoDto {
   birthDate?: Date;
   @ApiProperty({example: "AA1234567", description: "Teacher serial number"})
   passport_serial: string;
+  @ApiProperty({example: '1234567', description: 'file'})
+  photo: string;
 }

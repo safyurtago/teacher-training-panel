@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNumber, IsOptional, IsString } from "class-validator";
+import { IsNumber, IsNumberString, IsOptional, IsString } from "class-validator";
 
-export class UpdateTrainingDto {
+export class FindTrainingDto {
   @ApiProperty({example: 'Training title', description: 'Training title'})
   @IsString()
   @IsOptional()
@@ -22,8 +22,4 @@ export class UpdateTrainingDto {
   @IsNumber()
   @IsOptional()
   pass_score?: number;
-  @ApiProperty({example: '879b0fc6-74ea-4100-86cd-f6debf05971a.jpg/pdf', description: 'file for training'})
-  @IsString()
-  @IsOptional()
-  file?: string;
 }

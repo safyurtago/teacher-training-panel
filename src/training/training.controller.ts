@@ -1,34 +1,53 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { TrainingService } from './training.service';
-import { CreateTrainingDto } from './dto/create-training.dto';
-import { UpdateTrainingDto } from './dto/update-training.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Training } from './entities/training.entity';
+import { AdminGuard } from '../common/guards/admin.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CreateTrainingDto, FindTrainingDto, UpdateTrainingDto } from './dto';
 
+@ApiTags('TRAINING')
 @Controller('training')
 export class TrainingController {
   constructor(private readonly trainingService: TrainingService) {}
 
-  @Post()
-  create(@Body() createTrainingDto: CreateTrainingDto) {
-    return this.trainingService.create(createTrainingDto);
+  @ApiOperation({summary: 'CREATE Training'})
+  @ApiResponse({status: 201, type: Training})
+  @UseGuards(AdminGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  @Post('create')
+  create(@Body() createTrainingDto: CreateTrainingDto, @UploadedFile() image: any,) {
+    return this.trainingService.create(createTrainingDto, image);
   }
 
-  @Get()
-  findAll() {
-    return this.trainingService.findAll();
+  @ApiOperation({summary: 'FIND ALL Training'})
+  @ApiResponse({status: 200, type: [Training]})
+  @Post('find')
+  findAll(@Body() findTrainingDto: FindTrainingDto) {
+    return this.trainingService.findAll(findTrainingDto);
   }
 
-  @Get(':id')
+  @ApiOperation({summary: 'FIND ONE Training'})
+  @ApiResponse({status: 200, type: Training})
+  @Get('find/:id')
   findOne(@Param('id') id: string) {
-    return this.trainingService.findOne(+id);
+    return this.trainingService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto) {
-    return this.trainingService.update(+id, updateTrainingDto);
+  @ApiOperation({summary: 'UPDATE ONE Training'})
+  @ApiResponse({status: 200, type: Training})
+  @UseGuards(AdminGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  @Patch('update/:id')
+  update(@Param('id') id: string, @Body() updateTrainingDto: UpdateTrainingDto, @UploadedFile() image: any) {
+    return this.trainingService.update(id, updateTrainingDto, image);
   }
 
-  @Delete(':id')
+  @ApiOperation({summary: 'DELETE ONE Training'})
+  @ApiResponse({status: 200, type: Training})
+  @UseGuards(AdminGuard)
+  @Delete('delete/:id')
   remove(@Param('id') id: string) {
-    return this.trainingService.remove(+id);
+    return this.trainingService.remove(id);
   }
 }
