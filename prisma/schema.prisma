@@ -154,6 +154,90 @@ model CheckTrainingApply {
   @@map("check_training_apply")
 }
 
+model Lesson {
+  id          String   @id @default(uuid())
+  title       String   @unique
+  description String?
+  file        String?
+  is_active   Boolean? @default(true)
+
+  tasks Task[] @relation(name: "LessonTask")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("lesson")
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  file        String?
+  score       Int      @default(100)
+  is_active   Boolean? @default(true)
+  lessonId    String
+  lesson      Lesson   @relation(name: "LessonTask", fields: [lessonId], references: [id])
+
+  criterias   TaskCriteria[] @relation(name: "TaskCriteria")
+  task_applys TaskApply[]    @relation(name: "TaskApply")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("task")
+}
+
+model TaskCriteria {
+  id               String                   @id @default(uuid())
+  key              String
+  value            Int
+  description      String?
+  taskId           String
+  task             Task                     @relation(name: "TaskCriteria", fields: [taskId], references: [id])
+  checks_criterias CheckWithTaskCriterias[] @relation(name: "CheckTaskCriteria")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("task_criteria")
+}
+
+model TaskApply {
+  id            String   @id @default(uuid())
+  teacherId     String
+  teacher       Teacher  @relation(name: "TeacherTaskApply", fields: [teacherId], references: [id])
+  taskId        String
+  task          Task     @relation(name: "TaskApply", fields: [taskId], references: [id])
+  overall_score Int?
+  description   String
+  file          String?
+  is_active     Boolean?
+  is_seen       Boolean?
+
+  check_task_criterias CheckWithTaskCriterias[] @relation(name: "CheckTaskApply")
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("task_apply")
+}
+
+model CheckWithTaskCriterias {
+  id              String       @id @default(uuid())
+  task_applyId    String
+  task_apply      TaskApply    @relation(name: "CheckTaskApply", fields: [task_applyId], references: [id])
+  task_criteriaId String
+  task_criteria   TaskCriteria @relation(name: "CheckTaskCriteria", fields: [task_criteriaId], references: [id])
+  criteria_score  Int          @default(0)
+  description     String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("check_with_task_criterias")
+}
+
 // TEACHER 
 model Teacher {
   id                   String   @id @default(uuid())
@@ -168,6 +252,7 @@ model Teacher {
   created_at           DateTime @default(now())
   updated_at           DateTime @updatedAt
 
+  task_applys             TaskApply[]           @relation(name: "TeacherTaskApply")
   teacher_training_applys TrainingApply[]       @relation(name: "TrainingTeacher")
   write_question_applys   WriteQuestionApply[]  @relation(name: "WriteQuestionApply")
   choice_answer_applys    ChoiceAnswerApply[]   @relation(name: "TeacherApply")

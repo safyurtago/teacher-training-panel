@@ -18,6 +18,11 @@ import { WriteQuestionApplyModule } from './write_question_apply/write_question_
 import { TrainingModule } from './training/training.module';
 import { TrainingApplyModule } from './training_apply/training_apply.module';
 import { CheckTrainingApplyModule } from './check_training_apply/check_training_apply.module';
+import { LessonModule } from './lesson/lesson.module';
+import { TaskModule } from './task/task.module';
+import { TaskCriteriaModule } from './task_criteria/task_criteria.module';
+import { TaskApplyModule } from './task_apply/task_apply.module';
+import { CheckWithTaskCriteriasModule } from './check_with_task_criterias/check_with_task_criterias.module';
 
 @Module({
   imports: [
@@ -42,6 +47,11 @@ import { CheckTrainingApplyModule } from './check_training_apply/check_training_
     TrainingModule,
     TrainingApplyModule,
     CheckTrainingApplyModule,
+    LessonModule,
+    TaskModule,
+    TaskCriteriaModule,
+    TaskApplyModule,
+    CheckWithTaskCriteriasModule,
   ],
   controllers: [],
   providers: [],
