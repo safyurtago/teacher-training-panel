@@ -1,0 +1,38 @@
+version: '3'
+services:
+  prisma:
+    image: node:alpine
+    working_dir: /app/prisma
+    environment:
+      - DATABASE_URL=postgresql://postgres:admin@postgres:5432/teacher_panel
+    volumes:
+      - ./prisma:/app/prisma
+    command: ["npx", "prisma", "migrate", "dev", "--name", "init"]
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://postgres:admin@postgres:5432/teacher_panel?schema=public
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_DATABASE=teacher_panel
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=admin
+      - API_PORT=3000
+      - API_LOCAL_PORT=8000
+      - API_HOST=http://localhost
+    ports:
+      - "8000:3000"
+    depends_on:
+      - prisma
+
+  postgres:
+    image: postgres:14.0-alpine
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: postgres
+      POSTGRES_DB: teacher_panel
+    ports:
+      - "5432:5432"

@@ -1,7 +1,7 @@
 import { BadRequestException, CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { Admin } from "@prisma/client";
 import { PrismaService } from "../../prisma/prisma.service";
+import { Admin } from "../../admin/entities/admin.entity";
 
 @Injectable()
 export class AdminGuard implements CanActivate {
