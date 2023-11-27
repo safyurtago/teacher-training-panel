@@ -8,6 +8,7 @@ export class MailService {
     constructor (private mailerService: MailerService) {}
 
     async sendTeacherConfirmation(teacher: Teacher) : Promise<void> {
+        
         const  url = `${process.env.API_HOST}/api/teacher/activate/${teacher.activation_link}`;
         await this.mailerService.sendMail({
             to: teacher.email,
@@ -19,8 +20,8 @@ export class MailService {
             }
         })
     }
-
-
+    
+    
     async sendAdminConfirmation(admin: Admin) : Promise<void> {
         const  url = `${process.env.API_HOST}/api/admin/activate/${admin.activation_link}`;
         await this.mailerService.sendMail({

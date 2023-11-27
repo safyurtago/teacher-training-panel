@@ -114,4 +114,5 @@ export class AdminController {
     ) {
     return this.adminService.changePassword(changePasswordDto, req);
   }
+  
 }
